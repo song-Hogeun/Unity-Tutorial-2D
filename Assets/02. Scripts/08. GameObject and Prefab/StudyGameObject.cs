@@ -17,7 +17,7 @@ public class StudyGameObject : MonoBehaviour
 {
  	public GameObject prefab;
 	
-    private void Start()
+    private void Awake()
     {
 	    CreateAmongus();
     }
@@ -26,6 +26,7 @@ public class StudyGameObject : MonoBehaviour
     {
 	    GameObject obj = Instantiate(prefab);
 	    obj.name = "캐릭터";
+	    obj.tag = "Player";
 
 	    Transform objTf = obj.transform;
 	    int childCount = objTf.childCount;
