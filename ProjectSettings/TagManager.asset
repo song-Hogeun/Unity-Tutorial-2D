@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 3
   tags:
   - TrackingObject
+  - Plane
+  - Ball
+  - Ground
   layers:
   - Default
   - TransparentFX
