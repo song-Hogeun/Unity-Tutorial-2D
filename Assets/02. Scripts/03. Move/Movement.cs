@@ -16,6 +16,7 @@
  public class Movement : MonoBehaviour
  {
      public float moveSpeed = 5f;
+     public static int coin;
      
      void Update()
      {

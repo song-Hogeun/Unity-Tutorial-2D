@@ -13,22 +13,28 @@
 /// <summary>
 /// 클래스 설명을 적는 곳 입니다.
 /// <summary>
-public class DoorAnimation : MonoBehaviour
+public class DoorAnimation2 : MonoBehaviour
 {
-	private Animator animator;
+	Animator anim;
 
 	void Start()
 	{
-		animator = GetComponent<Animator>();
+		anim = GetComponent<Animator>();
 	}
-
+	
 	private void OnTriggerEnter(Collider other)
 	{
-		animator.SetTrigger("Open");
+		if(other.CompareTag("Player"))
+		{
+			anim.SetTrigger("Door Open");
+		}
 	}
 
 	void OnTriggerExit(Collider other)
 	{
-		animator.SetTrigger("Close");
+		if(other.CompareTag("Player"))
+		{
+			anim.SetTrigger("Door Close");
+		}
 	}
 }
