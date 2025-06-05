@@ -9,6 +9,7 @@
 	using Random = System.Random;
 
 	// Project
+using Cat;
 // Alias
 
 /// <summary>
@@ -16,6 +17,8 @@
 /// <summary>
 public class Transform_LoopMap : MonoBehaviour
 {
+	public GameManager gameManager;
+	
 	public float moveSpeed = 3f;
 	public float returnPosX = 15f;
 
@@ -24,13 +27,20 @@ public class Transform_LoopMap : MonoBehaviour
 
 	void Update()
 	{
-		// 배경 왼쪽으로 이동하는 기능
-		transform.position += Vector3.left * moveSpeed * Time.fixedDeltaTime;
-
-		if (transform.position.x <= -returnPosX)	// 이미지의 x축 값이 -30을 넘는 순간
+		if(!gameManager.isReady || gameManager.gameOver)
 		{
-			randomPosY = UnityEngine.Random.Range(-8f, -2.5f);
-			transform.position = new Vector3(returnPosX, randomPosY, 0.1f);		// 다시 사용하기 위해서 오른쪽 x = 30으로
+			transform.position = this.transform.position;
+		}
+		
+		else if (gameManager.isReady)
+		{
+			transform.position += Vector3.left * moveSpeed * Time.fixedDeltaTime;
+
+			if (transform.position.x <= -returnPosX)	// 이미지의 x축 값이 -30을 넘는 순간
+			{
+				randomPosY = UnityEngine.Random.Range(-8f, -2.5f);
+				transform.position = new Vector3(returnPosX, randomPosY, 0.1f);		// 다시 사용하기 위해서 오른쪽 x = 30으로
+			}
 		}
 	}
 }

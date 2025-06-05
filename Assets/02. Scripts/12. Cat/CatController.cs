@@ -8,6 +8,7 @@
 	using UnityEngine.UI;
 
 // Project
+	using Cat;
 // Alias
 
 /// <summary>
@@ -15,22 +16,38 @@
 /// <summary>
 public class CatController : MonoBehaviour
 {
-	public float jumpPower = 10.0f;
+	public GameManager gameManager;
+	public SoundManager soundManager;	
+	
+	private Rigidbody2D catRb;
+	private Animator catAnim;
+	
+	public float jumpPower = 11.0f;
+	public float limitPower = 10f;
 	public bool isGround;
-	private Rigidbody2D rb;
 
 	public int jumpCount;
 
 	void Start()
 	{
-		rb = GetComponent<Rigidbody2D>();
+		catRb = GetComponent<Rigidbody2D>();
+		catAnim = GetComponent<Animator>();
 	}
 	void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.Space) && jumpCount < 2)
+		if (!gameManager.isReady || gameManager.gameOver)
+			return;
+		
+		if (Input.GetKeyDown(KeyCode.Space) && jumpCount < 5)
 		{
-			rb.AddForceY(jumpPower, ForceMode2D.Impulse);
-			jumpCount++;
+			catAnim.SetTrigger("Jump");
+			catAnim.SetBool("isGround", false);
+			jumpCount++; // 1씩 증가
+			soundManager.OnJumpSound();
+			catRb.AddForceY(jumpPower, ForceMode2D.Impulse);
+
+			if (catRb.linearVelocityY > limitPower) // 자연스러운 점프를 위한 속도 제한
+				catRb.linearVelocityY = limitPower;
 		}
 	}
 
@@ -39,6 +56,7 @@ public class CatController : MonoBehaviour
 		if (other.collider.CompareTag("Ground"))
 		{
 			isGround = true;
+			catAnim.SetBool("isGround", isGround);
 			jumpCount = 0;
 		}
 	}
@@ -48,6 +66,7 @@ public class CatController : MonoBehaviour
 		if (other.collider.CompareTag("Ground"))
 		{
 			isGround = false;
+			catAnim.SetBool("isGround", isGround);
 		}
 	}
 }

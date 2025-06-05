@@ -15,18 +15,13 @@
 /// <summary>
 public class DoorAnimation2 : MonoBehaviour
 {
-	Animator anim;
+	public GameObject doorLock;
 
-	void Start()
-	{
-		anim = GetComponent<Animator>();
-	}
-	
 	private void OnTriggerEnter(Collider other)
 	{
 		if(other.CompareTag("Player"))
 		{
-			anim.SetTrigger("Door Open");
+			doorLock.SetActive(true);
 		}
 	}
 
@@ -34,7 +29,7 @@ public class DoorAnimation2 : MonoBehaviour
 	{
 		if(other.CompareTag("Player"))
 		{
-			anim.SetTrigger("Door Close");
+			doorLock.SetActive(false);
 		}
 	}
 }

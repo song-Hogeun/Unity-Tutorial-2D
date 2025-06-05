@@ -8,6 +8,7 @@
 	using UnityEngine.UI;
 
 // Project
+	using Cat;
 // Alias
 
 /// <summary>
@@ -15,11 +16,15 @@
 /// <summary>
 public class ColliderEvent : MonoBehaviour
 {
+	public GameManager gameManager;
+	public SoundManager soundManager;
+	
 	private void OnCollisionEnter2D(Collision2D other)
 	{
 		if (other.gameObject.CompareTag("Player"))
 		{
-			Debug.Log("Game Over");
+			soundManager.OnCollisionSound();
+			gameManager.gameOver = true;
 		}
 	}
 }
