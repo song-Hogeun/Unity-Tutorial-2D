@@ -25,7 +25,7 @@ public class CatController : MonoBehaviour
 	public float jumpPower = 11.0f;
 	public float limitPower = 10f;
 	public bool isGround;
-
+	
 	public int jumpCount;
 
 	void Start()
@@ -38,7 +38,7 @@ public class CatController : MonoBehaviour
 		if (!gameManager.isReady || gameManager.gameOver)
 			return;
 		
-		if (Input.GetKeyDown(KeyCode.Space) && jumpCount < 5)
+		if (Input.GetKeyDown(KeyCode.Space) && jumpCount < 10)
 		{
 			catAnim.SetTrigger("Jump");
 			catAnim.SetBool("isGround", false);
@@ -49,24 +49,36 @@ public class CatController : MonoBehaviour
 			if (catRb.linearVelocityY > limitPower) // 자연스러운 점프를 위한 속도 제한
 				catRb.linearVelocityY = limitPower;
 		}
-	}
 
+		var catRotation = transform.eulerAngles;
+		catRotation.z = catRb.linearVelocityY * 5f;
+		transform.eulerAngles = catRotation;
+	}
+	
+	private void OnTriggerEnter2D(Collider2D other)
+	{
+		if (other.CompareTag("Apple"))
+		{
+			other.gameObject.SetActive(false);
+			other.transform.parent.GetComponent<ItemEvent>().particle.SetActive(true);
+			
+			GameManager.score++;
+		}
+	}
+	
 	private void OnCollisionEnter2D(Collision2D other)
 	{
+		if (other.collider.CompareTag("Pipe"))
+		{
+			soundManager.OnCollisionSound();
+			gameManager.GameEnd();
+		}
+		
 		if (other.collider.CompareTag("Ground"))
 		{
 			isGround = true;
 			catAnim.SetBool("isGround", isGround);
 			jumpCount = 0;
-		}
-	}
-
-	void OnCollisionExit2D(Collision2D other)
-	{
-		if (other.collider.CompareTag("Ground"))
-		{
-			isGround = false;
-			catAnim.SetBool("isGround", isGround);
 		}
 	}
 }

@@ -14,6 +14,8 @@ TagManager:
   - Score50
   - GameOver
   - Handle
+  - Apple
+  - Pipe
   layers:
   - Default
   - TransparentFX
@@ -56,6 +58,9 @@ TagManager:
     locked: 0
   - name: Cat
     uniqueID: 4161661421
+    locked: 0
+  - name: UI
+    uniqueID: 48876991
     locked: 0
   m_RenderingLayers:
   - Default

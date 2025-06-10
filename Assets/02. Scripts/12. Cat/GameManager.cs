@@ -19,49 +19,46 @@ namespace Cat
 {
 	public class GameManager : MonoBehaviour
 	{
-		public static GameManager instance;
-		
 		public UIManager uiManager;
 		public SoundManager soundManager;
 		
 		public GameObject[] gameSet;
 		public GameObject catCharacter;
+		public GameObject catName;
+		public GameObject oiiaiVideo;
+		
+		public TextMeshProUGUI playTimeUI;
+		public TextMeshProUGUI scoreUI;
 		
 		public float playTime;
 		public float saveTime;
+
+		public static int score;
 		
 		public bool isReady;
 		public bool gameOver;
 
-		void Awake()
-		{
-			if (instance == null)
-			{
-				instance = this;
-			}
-			
-			else
-			{
-				Destroy(gameObject);
-				instance = this;
-			}
-		}
-		
 		void Start()
 		{
+			playTime = 0f;
+			score = 0;
+			
+			oiiaiVideo.SetActive(true);
+			
 			soundManager.SetIntroSound();	// 인트로 BGM 사운드 실행
 			
-			catCharacter.SetActive(false);	// Cat Off
-			gameSet[0].SetActive(true);		// Game Start Set Off
-			gameSet[1].SetActive(false);	// Ready Text Off
-			gameSet[2].SetActive(false);	// Game End Set Off
+			CatSetOnActive(false, false);
+			GameSetOnActive(true, false, false);
 		}
 
 		private void Update()
 		{
 			if(!gameOver && isReady)	// 게임 오버 상태가 아니면서 준비 상태일 때
 			{
+				oiiaiVideo.SetActive(false);
 				playTime += Time.deltaTime;	// 게임 플레이 타임을 계산
+				playTimeUI.text = string.Format($"플레이 타임 : {playTime:N1} 초");
+				scoreUI.text = string.Format($"X {score}");
 			}
 			
 			if (gameOver)				// 게임 오버 상태일 때
@@ -69,6 +66,19 @@ namespace Cat
 				GameEnd();				// 게임 오버 로직 실행
 				saveTime = playTime;	// 생존 시간 저장
 			}
+		}
+
+		void CatSetOnActive(bool isActiveOne, bool isActiveTwo)
+		{
+			catName.SetActive(isActiveOne);
+			catCharacter.SetActive(isActiveTwo);
+		}
+
+		void GameSetOnActive(bool isActiveOne, bool isActiveTwo, bool isActiveThree)
+		{
+			gameSet[0].SetActive(isActiveOne);		// Game Start Set Off
+			gameSet[1].SetActive(isActiveTwo);		// Ready Text On
+			gameSet[2].SetActive(isActiveThree);	// Game End Set Off
 		}
 		
 		public void GameStart()
@@ -78,14 +88,12 @@ namespace Cat
 			
 			soundManager.SetBGMSound();		// BGM 사운드 재생
 			
-			catCharacter.SetActive(true);	// Cat On
-			
-			gameSet[0].SetActive(false);	// Game Start Set Off
-			gameSet[1].SetActive(true);		// Ready Text On
-			gameSet[2].SetActive(false);	// Game End Set Off
+			CatSetOnActive(true, true);
+			GameSetOnActive(false, true, false);
+
 			isReady = true;
 		}
-
+		
 		public void Restart()
 		{
 			SceneManager.LoadScene(0);		// 로비 복귀
@@ -96,10 +104,9 @@ namespace Cat
 			gameOver = true;				// gameOver 상태
 			
 			saveTime = playTime;			// 최종 플레이 타임 저장
-			uiManager.SetSaveTimeText();	// 플레이 타임 표시
-			gameSet[0].SetActive(false);	// Game Start Set Off
-			gameSet[1].SetActive(false);	// Ready Text Off
-			gameSet[2].SetActive(true);		// Game End Set On
+			uiManager.SetUITextSetting();	// 플레이 타임 표시
+			
+			GameSetOnActive(false, false, true);
 		}
 	}
 }

@@ -23,41 +23,19 @@ namespace Cat
 		
 		public TMP_InputField nameInputField;
 		public TMP_Text saveTimeText;
+		public TMP_Text scoreText;
 		public TMP_Text nickNameText;
-
-		public GameObject fadePanel;
-		public Animator fadeAnim;
 		
-		public void SetSaveTimeText()
+		public void SetUITextSetting()
 		{
-			saveTimeText.text = $"생존 시간 : {Mathf.CeilToInt(gameManager.saveTime)} 초";	
+			saveTimeText.text = $"생존 시간 : {Mathf.CeilToInt(gameManager.saveTime)} 초";
+			scoreText.text = $"X : {GameManager.score}";
 		}
 
 		public void SetName()
 		{
 			nickNameText.text = nameInputField.text;
 			nameInputField.text = "";
-		}
-
-		public void FadePanel()
-		{
-			gameManager.isReady = false;
-			fadePanel.SetActive(true);
-			StartCoroutine(IFadeInDelay());
-		}
-
-		IEnumerator IFadeInDelay()
-		{
-			fadeAnim.SetTrigger("Fade Out");
-			yield return new WaitForSeconds(2f);
-			
-			fadeAnim.SetTrigger("Fade In");
-			yield return new WaitForSeconds(1.5f);
-			
-			gameManager.GameStart();
-			fadePanel.SetActive(false);
-			
-			StopCoroutine(IFadeInDelay());
 		}
 	}
 }
